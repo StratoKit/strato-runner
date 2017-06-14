@@ -1,0 +1,32 @@
+{
+  "name": "stratokit",
+  "version": "0.1.0",
+  "description": "Highly modular modern framework for NodeJS applications",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/StratoKit/stratokit.git"
+  },
+  "scripts": {
+    "build": "makfy build",
+    "test": "makfy test"
+  },
+  "ava": {
+    "files": [
+      "dist/**/*.test.js*"
+    ]
+  },
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "babel-cli": "^6.24.1",
+    "js-yaml": "^3.8.4"
+  },
+  "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "*",
+    "babel-register": "^6.24.1",
+    "electrode-confippet": "^1.5.0",
+    "fs-extra": "^3.0.1",
+    "makfy": "^1.1.11"
+  }
+}
