@@ -20,7 +20,7 @@ const getPluginFromRegistry = async entry => {
 		registry[entry] = plugin
 	}
 	if (process.env.NODE_ENV !== 'production') {
-		const {name, config, requires, load, start, stop, ...rest} = plugin
+		const {name, version, config, requires, load, start, stop, configured, loaded, started, ...rest} = plugin
 		const keys = Object.keys(rest)
 		if (keys.length) {
 			throw new Error(

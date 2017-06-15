@@ -30,7 +30,6 @@ module.exports = [
 				config.state2.loadCount++
 			},
 			start: ({config}) => {
-				console.log('start 2\n')
 				config.state2.startCount++
 			},
 		},

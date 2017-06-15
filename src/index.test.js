@@ -14,7 +14,7 @@ test('initial registry', t => {
 })
 
 test('start', async t => {
-	const {start, stope plugins, config} = require('.').default
+	const {start, stop, plugins, config} = require('.').default
 	await start('test')
 	t.is(plugins.test.started, true)
 	t.is(config.state.loadCount, 1)
