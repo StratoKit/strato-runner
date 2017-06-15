@@ -11,8 +11,8 @@
     "test": "makfy test"
   },
   "ava": {
-    "files": [
-      "dist/**/*.test.js*"
+    "require": [
+      "babel-register"
     ]
   },
   "devDependencies": {

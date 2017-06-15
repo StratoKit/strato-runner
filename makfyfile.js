@@ -15,19 +15,15 @@ module.exports.commands = {
 		desc: 'Build Stratokit',
 		args: {watch: {type: 'flag'}},
 		run: async (exec, {watch}, utils) => {
-			// yaml convert
-			const yamlFiles = await utils.getFileChangesAsync('yaml', 'src/**/*.yaml')
-			await fs.mkdirp('dist/config/defaults')
-			await Promise.all(yamlFiles.added.concat(yamlFiles.modified).map(doYaml))
-
+			await fs.emptyDir('dist')
 			// transpile src/ to dist/
-			await exec(`babel ${watch ? '--watch' : ''} --source-map=true -d dist/ src/`)
+			await exec(`babel ${watch ? '--watch' : ''} -s true --ignore '**/*.test.js' -D -d dist/ src/`)
 		},
 	},
 
 	test: {
 		args: {watch: {type: 'flag'}},
 		run: (exec, {watch}) =>
-			exec(`ava dist/**/*.test.js ${watch ? '--watch' : ''} `),
+			exec(`ava ${watch ? '--watch' : ''} `),
 	},
 }
