@@ -1,8 +1,6 @@
 // Everything that Stratokit runs has access to the project configuration
 // Here we make sure the config is loaded before the entry point runs
-// * ES5 code only! Babel reads this as part of the config
-//   * Although maybe Stratokit core should be transpiled separately from the rest of the project…
-// * Only use require() so that Webpack can track dependencies
+// * Only use require() so that Webpack can track dependencies, don't read files
 
 const confippet = require('electrode-confippet')
 
@@ -11,8 +9,7 @@ const mergeWith = require('lodash/mergeWith')
 
 const {NODE_ENV} = process.env || 'development'
 
-// We don't use this - we load the json in the dist dir after transpiling
-// require('./register-yaml')
+require('../transpile/register-yaml')
 const defaults = require('./defaults/default')
 try {
 	mergeWith(defaults, require(`./defaults/${NODE_ENV}`))

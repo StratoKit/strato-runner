@@ -122,6 +122,17 @@ stratokit:
     # eg. assets: {exclude: 'foo', loader: 'bar'}
     # or. assets: {replaceExclude: 'foo', replaceLoader: 'bar'}
     loaderConfig: {}
+babel:
+  transpilePlugins: true
+  # The options provided to 
+  options: 
+    presets:
+      - - env
+        - targets:
+            node: 'current'
+          useBuiltins: true
+    plugins:
+      - transform-object-rest-spread
 
 npm:
   version: '{{config.version}}'

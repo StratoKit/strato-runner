@@ -1,3 +1,6 @@
+import config from './config'
+import startTranspile from './transpile/startTranspile'
+
 export const registry = {}
 
 const registerPlugin = (name, plugin) => {
@@ -43,6 +46,9 @@ export const registerPlugins = (plugins, forceName) => {
 
 // TODO under webpack, expect user plugin registry in global
 // TODO use NODE_CONFIG_DIR like confippet does
+if (config.babel.transpilePlugins) {
+	startTranspile(config.babel.options)
+}
 let userPlugins
 try {
 	// Optionally, the user can require plugins in `config/plugins.js`
