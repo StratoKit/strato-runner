@@ -20,7 +20,19 @@ const getPluginFromRegistry = async entry => {
 		registry[entry] = plugin
 	}
 	if (process.env.NODE_ENV !== 'production') {
-		const {name, version, config, requires, load, start, stop, configured, loaded, started, ...rest} = plugin
+		const {
+			name,
+			version,
+			config,
+			requires,
+			load,
+			start,
+			stop,
+			configured,
+			loaded,
+			started,
+			...rest
+		} = plugin
 		const keys = Object.keys(rest)
 		if (keys.length) {
 			throw new Error(
@@ -74,7 +86,7 @@ const loadRecurse = async plugin => {
 
 	if (plugin.load) {
 		dbg(`loading plugin ${plugin.name}`)
-		await plugin.load(stratokit)
+		await plugin.load({config, plugin})
 	}
 
 	plugin.loaded = true
@@ -90,7 +102,7 @@ const startRecurse = async plugin => {
 
 	if (plugin.start) {
 		dbg(`starting plugin ${plugin.name}`)
-		await plugin.start(stratokit)
+		await plugin.start({config, plugin})
 	}
 	plugin.started = true
 }
@@ -112,7 +124,7 @@ const stopRecurse = async plugin => {
 
 	if (plugin.stop) {
 		dbg(`stopping plugin ${plugin.name}`)
-		await plugin.stop(stratokit)
+		await plugin.stop({config, plugin})
 	}
 	delete plugin.started
 
