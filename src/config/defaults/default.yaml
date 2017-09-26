@@ -5,127 +5,30 @@
 # See https://github.com/electrode-io/electrode-confippet for explanation
 # TODO some basic instructions
 
+# The actual application targets
+entries: {}
+run: []
+
 # App version
 version: 0.1.0
 appName: StratoApp
 
-# Languages we should support
-languages: [en]
-
-# Translation sections and their graphql name
-sections:
-  a: APP
-  c: COUNTRY
-
 paths:
   root: '{{cwd}}'
-  stratokit: '{{config.paths.root}}/lib'
   app: '{{config.paths.root}}/src'
   assets: '{{config.paths.root}}/assets'
-  state: '{{config.paths.app}}/redux'
-  icons: '{{config.paths.assets}}/icons' # TODO move to plugin
-  upload: '{{config.paths.build.root}}/upload'
   build:
     root: '{{config.paths.root}}/build'
     cache: '{{config.paths.root}}/build/cache'
-    client: '{{config.paths.root}}/build/client'
-    dll: '{{config.paths.root}}/build/dll'
-    server: '{{config.paths.root}}/build/server'
   nodeModules: '{{config.paths.root}}/node_modules'
 
 stratokit:
-  # The current config stage. CONFIG - LOAD - RUN
-  stage: CONFIG
-
   plugins: []
 
-  server:
-    entry: 'stratokit/server'
-    host: localhost
-    port: 3000
-
-    # SocketCluster options
-    logLevel: 1
-    workers: 1
-    brokers: 1
-    socketChannelLimit: 1000
-
-    # Basic authentication - only meant for single user
-    requireBasicAuth:
-      # message
-      # name
-      # pass
-
-  # TODO plugin
-  db:
-    file: '{{config.paths.build.root}}/data-{{deployment}}.db'
-
-  # TODO plugin
-  sessions:
-    # https://github.com/rawberg/connect-sqlite3/blob/master/Readme.md#Options
-    dir: '{{config.paths.build.root}}'
-
-  graphiql: true
-
-  webpack:
-    publicPath: '/_'
-
-    alias:
-      app: '{{config.paths.app}}'
-      stratokit: '{{config.paths.stratokit}}'
-      assets: '{{config.paths.assets}}'
-      state: '{{config.paths.state}}'
-      # Optimize lodash-es, everybody should use lodash
-      lodash-es: 'lodash'
-      # See https://github.com/lodash/lodash-webpack-plugin/issues/101
-      lodash.flatten: 'lodash/flatten'
-      lodash.pick: 'lodash/pick'
-      lodash.keys: 'lodash/keys'
-      lodash.isarguments: 'lodash/isArguments'
-      lodash.isarray: 'lodash/isArray'
-      lodash._getnative: 'lodash/_getnative'
-
-    use:
-      urlLoader: 1000
-      css:
-        enabled: true
-        sass: true
-        modules: true
-        autoprefixer: true
-      svgo:
-        enabled: true
-
-    extensions:
-      json: [json]
-      yaml: [yaml]
-      raw: [txt]
-      assets: [png, jpg, jpeg, gif, ttf, eot, woff, woff2, mp3, wav, svg]
-      css: [css, scss, sass]
-      svg: [svg]
-      sass: [scss, sass]
-      js: [js, jsx]
-
-    # any globals etc
-    defines:
-      __IN_WEBPACK__: true
-      __CONFIG__:
-        languages: '{{config.languages}}'
-        sections: '{{config.sections}}'
-        name: '{{config.appName}}'
-        version: '{{config.version}}'
-        graphiql: '{{config.stratokit.graphiql}}'
-
-    # any loaders you like
-    loaders: []
-
-    # these keys add to the default config. TODO
-    # eg. assets: {exclude: 'foo', loader: 'bar'}
-    # or. assets: {replaceExclude: 'foo', replaceLoader: 'bar'}
-    loaderConfig: {}
 babel:
   transpilePlugins: true
-  # The options provided to 
-  options: 
+  # The options object provided to Babel - todo: babel-config.js import
+  options:
     presets:
       - - env
         - targets:
@@ -164,79 +67,47 @@ npm:
     lint-fix: "xo --fix 'src/**/*.js' 'lib/**/*.js' 'src/**/*.jsx' 'lib/**/*.jsx'"
 
   devDependencies:
-    assets-webpack-plugin: ^3.5.1
-    autoprefixer: ^7.1.1
-    babel-cli: ^6.24.1
-    babel-core: ^6.24.1
-    babel-eslint: ^7.2.3
-    babel-loader: ^7.0.0
-    babel-plugin-lodash: ^3.2.11
-    babel-plugin-styled-components: ^1.1.4
+
+    # TODO support import() on plain node
     babel-plugin-syntax-dynamic-import: '*'
-    babel-plugin-transform-class-properties: ^6.24.1
-    babel-plugin-transform-decorators-legacy: ^1.3.4
-    babel-plugin-transform-es2015-destructuring: ^6.23.0
-    babel-plugin-transform-es2015-parameters: ^6.24.1
-    babel-plugin-transform-export-extensions: ^6.22.0
-    babel-plugin-transform-object-rest-spread: ^6.23.0
-    babel-plugin-transform-react-jsx-self: ^6.22.0
-    babel-plugin-transform-react-jsx-source: ^6.22.0
-    babel-plugin-transform-regenerator: ^6.24.1
-    babel-plugin-transform-runtime: ^6.23.0
+
+    # TODO `run` plugin
     babel-plugin-webpack-alias: ^2.1.2
-    babel-preset-babili: ^0.1.2
-    babel-preset-env: ^1.5.1
-    babel-preset-latest: ^6.24.1
-    babel-preset-react: ^6.24.1
-    babel-preset-stage-2: ^6.24.1
-    babel-register: ^6.24.1
-    concurrently: ^3.4.0
-    css-loader: ^0.28.4
-    extract-text-webpack-plugin: ^2.1.0
-    file-loader: ^0.11.1
-    hard-source-webpack-plugin: ^0.3.12
-    json-loader: '*'
-    yaml-loader: '*'
-    node-object-hash: ^1.2.0
-    node-sass: ^4.5.3
+
+    # TODO dashboard plugin
     nodejs-dashboard: ^0.4.1
-    null-loader: 0.1.1
-    postcss-loader: '1'
-    postcss-modules-values: 1.2.2
-    raw-loader: 0.5.1
-    react-hot-loader: next
-    redbox-react: ^1.3.7
-    rimraf: ^2.6.1
-    sass-loader: ^6.0.5
-    start-server-webpack-plugin: ^2.2.0
-    stats-webpack-plugin: ^0.6.0
-    style-loader: ^0.18.1
-    svg-sprite-loader: ^0.3.0
-    svgo: ^0.7.2
-    svgo-loader: ^1.2.1
-    unused-files-webpack-plugin: ^3.0.1
-    url-loader: ^0.5.8
-    webpack: ^2.6.1
-    webpack-bundle-analyzer: ^2.8.2
-    webpack-cleanup-plugin: '*'
-    webpack-dev-middleware: ^1.10.2
-    webpack-hot-middleware: ^2.18.0
-    webpack-node-externals: ^1.6.0
+
+    # # TODO babel options for these? react plugin?
+    # babel-plugin-transform-class-properties: ^6.24.1
+    # babel-plugin-transform-decorators-legacy: ^1.3.4
+    # babel-plugin-transform-react-jsx-self: ^6.22.0
+    # babel-plugin-transform-react-jsx-source: ^6.22.0
+    # babel-preset-react: ^6.24.1
+    # babel-preset-stage-2: ^6.24.1
+
+    # # TODO icon plugin
+    # svg-sprite-loader: ^0.3.0
+    # svgo: ^0.7.2
+    # svgo-loader: ^1.2.1
+
 
     # TODO plugin
-    xo: ^0.18.2
-    eslint: ^3.19.0
-    eslint-config-xo-meatier: 0.2.2
-    eslint-config-xo-react: ^0.12.0
-    eslint-import-resolver-webpack: ^0.8.1
+    eslint: ^4.6.1
+    eslint-config-xo: ^0.18.2
+    eslint-import-resolver-webpack: ^0.8.3
+    eslint-plugin-ava: ^4.2.2
     eslint-plugin-babel: ^4.1.1
-    eslint-plugin-import: ^2.3.0
-    eslint-plugin-react: ^7.0.1
+    eslint-plugin-import: ^2.7.0
+    eslint-plugin-promise: ^3.5.0
+    eslint-plugin-unicorn: ^2.1.2
+    # only include this if react plugin is used
+    # eslint-config-xo-react: ^0.13.0
+    # eslint-plugin-react: ^7.3.0
 
   dependencies:
     # Transpilation
-    babel-polyfill: ^6.23.0
-    babel-runtime: ^6.23.0
+    babel-polyfill: ^6.26.0
+    babel-runtime: ^6.26.0
     source-map-support: ^0.4.15
 
     # Utility
@@ -249,10 +120,7 @@ npm:
     mz: ^2.4.0
 
     # Config
-    electrode-confippet: ^1.5.0
-    json5: ^0.5.1
     makfy: ^1.1.11
-    js-yaml: '*'
 
     # DB
     sqlite: ^2.8.0

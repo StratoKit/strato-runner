@@ -11,10 +11,11 @@ module.exports = [
 		config: {
 			state,
 		},
-		load: ({config}) => {
+		load: ({config, plugin}) => {
 			config.state.loadCount++
+			plugin.requires.push('name')
 		},
-		start: ({config}) => {
+		start: async ({config}) => {
 			config.state.startCount++
 		},
 	},
@@ -26,7 +27,7 @@ module.exports = [
 			config: {
 				state2: state,
 			},
-			load: ({config}) => {
+			load: async ({config}) => {
 				config.state2.loadCount++
 			},
 			start: ({config}) => {
