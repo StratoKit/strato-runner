@@ -11,22 +11,29 @@
     "test": "makfy test"
   },
   "ava": {
+    "files": [
+      "src/**/*.test.js"
+    ],
+    "source": [
+      "src/**/*.(js|yaml)"
+    ],
+    "babel": "inherit",
     "require": [
       "babel-register"
     ]
   },
   "devDependencies": {
-    "ava": "^0.19.1",
-    "babel-cli": "^6.24.1",
-    "js-yaml": "^3.8.4"
+    "ava": "^0.22.0",
+    "babel-cli": "^6.26.0",
+    "js-yaml": "^3.10.0"
   },
   "dependencies": {
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-env": "*",
-    "babel-register": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.26.0",
     "electrode-confippet": "^1.5.0",
-    "fs-extra": "^3.0.1",
-    "makfy": "^1.1.11"
+    "fs-extra": "^4.0.2",
+    "makfy": "^1.2.0"
   }
 }
