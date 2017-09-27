@@ -4,7 +4,7 @@
 
 After consideration:
 
-Plugins should not be registered in a `plugins.js` file. Maybe that can be optional. By registering them directly in the app, bundles only include the ones that are really needed.
+Plugins should not be registered in a `plugins.js` file. Maybe that can be optional. By registering them directly in the app, bundles only include the ones that are really needed. OTOH, how would you register project-only plugins like webpack and eslint? Using the require expansion in config?
 
 Stratokit provides these services:
 
@@ -12,12 +12,15 @@ Stratokit provides these services:
     * loading the config/* from disk is only for when running under node; the browser config goes via defines, initial state or global vars
   * plugin management (TODO add helpers for hooks, see how webpack does it)
   * transpilation
+  * CLI tool to manage project meta files (package.json, eslint, ...) (TODO)
 
-A run plugin would configure npm script lines to run a given file as a plugin, or a plugin.
+A run plugin would configure npm script lines to run a given file as a plugin `start()`, or a plugin.
 
 A webpack plugin would get an entry file or plugin, and do all that is needed to build it with webpack, including maybe creating stubs (probably not needed). It should also handle hot reload. Babel-loader gets the transpilation config. For the client build, the transpile target is browser, and no script is run.
 
-To run webpack middleware, best to run it on a unix socket and proxy, although that's a bit sucky regarding terminals. Maybe run it in background on demand with a watchdog to kill it if no app port visible for a while. It could also monitor webpack config and reload.
+for example, you would run `stratokit hot-node src/_server` to run a react server (you'd need to at least start the `react-ssr` and `express` plugins). If you first ran `stratokit hot-browser src/_browser` (using e.g. `i18n`, `react`, `redux`, `apollo` plugins) it would detect the build socket and proxy that, otherwise serve the static assets.
+
+To run webpack middleware, best to run it on a unix socket and proxy, although that's a bit sucky regarding terminal sessions. Maybe run it in background on demand with a watchdog to kill it if no app port visible for a while. It could also monitor webpack config and reload.
 
 So it might be useful to call from the app init script `stratokit.start(plugin1, plugin2, "alreadyregisteredplugin3", require.resolve('fooplugin'))` and it would auto-register everything given.
 
