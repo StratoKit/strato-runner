@@ -1,5 +1,30 @@
 # StratoKit: Highly modular NodeJS project framework
 
+# TODO
+
+After consideration:
+
+Plugins should not be registered in a `plugins.js` file. Maybe that can be optional. By registering them directly in the app, bundles only include the ones that are really needed.
+
+Stratokit provides these services:
+
+  * declarative project configuration, for npm, plugins, app, transpilation
+    * loading the config/* from disk is only for when running under node; the browser config goes via defines, initial state or global vars
+  * plugin management (TODO add helpers for hooks, see how webpack does it)
+  * transpilation
+
+A run plugin would configure npm script lines to run a given file as a plugin, or a plugin.
+
+A webpack plugin would get an entry file or plugin, and do all that is needed to build it with webpack, including maybe creating stubs (probably not needed). It should also handle hot reload. Babel-loader gets the transpilation config. For the client build, the transpile target is browser, and no script is run.
+
+To run webpack middleware, best to run it on a unix socket and proxy, although that's a bit sucky regarding terminals. Maybe run it in background on demand with a watchdog to kill it if no app port visible for a while. It could also monitor webpack config and reload.
+
+So it might be useful to call from the app init script `stratokit.start(plugin1, plugin2, "alreadyregisteredplugin3", require.resolve('fooplugin'))` and it would auto-register everything given.
+
+It is probably also useful to dynamically register plugins, depending on the app config. If we wait until the load phase, the config needs re-finalizing, which is wasteful, so instead a `getDeps()` getter could be supported?
+
+_the below does not yet fully reflect this_
+
 ## Intro
 
 StratoKit is a runner engine and a collection of plugins.
@@ -73,6 +98,7 @@ When you start a plugin, it is first loaded along with all its dependencies. Ste
   * load the plugins named in `deps`, in order (so depth-first loading)
   * await `plugin.load(stratokit)` function if there is one
   * the load function sets up shared objects in the `stratokit` object, including maybe changing the `config`
+  * TODO dynamically marking plugins as deps: extra deps will be loaded and added to deps
 
 ### Start
 
