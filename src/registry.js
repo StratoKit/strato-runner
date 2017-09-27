@@ -56,7 +56,9 @@ try {
 	userPlugins = require(process.cwd() + '/config/plugins')
 	userPlugins = (userPlugins && userPlugins.default) || userPlugins
 } catch (err) {
-	if (err.code !== 'MODULE_NOT_FOUND') {
+	if (
+		!(err.code === 'MODULE_NOT_FOUND' && /.config.plugins'/.test(err.message))
+	) {
 		throw err
 	}
 }
