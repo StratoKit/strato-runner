@@ -17,13 +17,25 @@ module.exports.commands = {
 		run: async (exec, {watch}, utils) => {
 			await fs.emptyDir('dist')
 			// transpile src/ to dist/
-			await exec(`babel ${watch ? '--watch' : ''} -s true --ignore '**/*.test.js' -D -d dist/ src/`)
+			await exec(
+				`babel ${watch
+					? '--watch'
+					: ''} -s true --ignore '**/*.test.js' -D -d dist/ src/`
+			)
+		},
+	},
+
+	buildGit: {
+		desc: 'Build Stratokit and push to git branch',
+		run: async (exec, args, utils) => {
+			await fs.emptyDir('dist')
+			// transpile src/ to dist/
+			await exec(`sh build-git.sh`)
 		},
 	},
 
 	test: {
 		args: {watch: {type: 'flag'}},
-		run: (exec, {watch}) =>
-			exec(`ava ${watch ? '--watch' : ''} `),
+		run: (exec, {watch}) => exec(`ava ${watch ? '--watch' : ''} `),
 	},
 }

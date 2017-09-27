@@ -6,6 +6,10 @@
     "type": "git",
     "url": "ssh://git@github.com/StratoKit/stratokit.git"
   },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "makfy build",
     "test": "makfy test"
