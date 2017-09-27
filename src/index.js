@@ -10,12 +10,14 @@ const plugins = {}
 const getPluginFromRegistry = async entry => {
 	let plugin = registry[entry]
 	if (!plugin) {
-		throw new Error(`no plugin with the name "${entry}" is registered`)
+		throw new TypeError(`no plugin with the name "${entry}" is registered`)
 	}
 	if (plugin.then) {
 		plugin = await plugin
-		if (typeof plugin.name !== 'string') {
-			throw new Error(`Promise for plugin "${entry}" did not yield a plugin`)
+		if (!plugin || typeof plugin.name !== 'string') {
+			throw new TypeError(
+				`Promise for plugin "${entry}" did not yield a plugin`
+			)
 		}
 		registry[entry] = plugin
 	}
@@ -35,7 +37,7 @@ const getPluginFromRegistry = async entry => {
 		} = plugin
 		const keys = Object.keys(rest)
 		if (keys.length) {
-			throw new Error(
+			throw new TypeError(
 				`Plugin ${entry} has these unknown keys: ${keys.join(' ')}`
 			)
 		}
@@ -47,7 +49,7 @@ const configureRecurse = async plugin => {
 	if (plugin.configured) return
 
 	if (plugin.configuring)
-		throw new Error(`circular dependency configuring "${plugin.name}`)
+		throw new TypeError(`circular dependency configuring "${plugin.name}`)
 
 	plugin.configuring = true
 
@@ -55,7 +57,7 @@ const configureRecurse = async plugin => {
 	if (plugin.config) config._$.defaults(plugin.config)
 
 	if (plugins[plugin.name])
-		throw new Error(
+		throw new TypeError(
 			`naming conflict, there can only be one plugin named "${plugin.name}`
 		)
 
