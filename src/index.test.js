@@ -2,7 +2,6 @@
 // But plugins.js transpiling works now and it's annoying to keep transpiling separate
 // Once something ava-webpack comes out we can use that
 import test from 'ava'
-import path from 'path'
 
 process.chdir('tests/test-project')
 

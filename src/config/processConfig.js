@@ -47,7 +47,8 @@ function processObj(obj, data) {
 
 		if (_.isString(value)) {
 			if (/^\{\{.*}}$/.test(value)) {
-				const newV = (obj[key] = resolve(value.slice(2, -2)))
+				const newV = resolve(value.slice(2, -2))
+				obj[key] = newV
 				if (typeof newV === 'string' && _.includes(newV, '{{')) {
 					data.more++
 				}

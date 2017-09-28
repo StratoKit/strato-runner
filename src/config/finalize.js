@@ -21,6 +21,7 @@ const finalize = config => {
 	const missing = processConfig(config, options)
 
 	if (missing.length) {
+		// eslint-disable-next-line no-console
 		console.error('!!! These config templates could not be expanded:', missing)
 	}
 }

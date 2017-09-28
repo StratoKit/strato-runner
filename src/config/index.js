@@ -32,6 +32,7 @@ if (dirs.length > 0 && process.env.NODE_CONFIG_DIR) {
 	dirs.push(process.env.NODE_CONFIG_DIR)
 }
 if (dirs.length > 0) {
+	// eslint-disable-next-line no-console
 	console.log('config dirs', dirs)
 }
 
