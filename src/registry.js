@@ -1,6 +1,8 @@
+import debug from 'debug'
 import config from './config'
 import startTranspile from './transpile/startTranspile'
 
+const dbg = debug('stratokit/registry')
 export const registry = {}
 
 const registerPlugin = (name, plugin) => {
@@ -16,6 +18,7 @@ const registerPlugin = (name, plugin) => {
 			)
 		return
 	}
+	dbg(`registering plugin '${name}'`)
 	registry[name] = plugin
 }
 export const registerPlugins = (plugins, forceName) => {
