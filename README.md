@@ -26,7 +26,10 @@ So it might be useful to call from the app init script `stratokit.start(plugin1,
 
 It is probably also useful to dynamically register plugins, depending on the app config. If we wait until the load phase, the config needs re-finalizing, which is wasteful, so instead a `getDeps()` getter could be supported?
 
-_the below does not yet fully reflect this_
+Also, the transpilation part should be a separate package, because it is not needed in production and it has heavy dependencies.
+
+# _the below content does not yet fully reflect the above_
+
 
 ## Intro
 
