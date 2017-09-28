@@ -21,10 +21,7 @@ const finalize = config => {
 	const missing = processConfig(config, options)
 
 	if (missing.length) {
-		console.error(
-			'!!! These config templates could not be expanded:',
-			missing
-		)
+		console.error('!!! These config templates could not be expanded:', missing)
 	}
 }
 

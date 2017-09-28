@@ -27,6 +27,13 @@
       "babel-register"
     ]
   },
+  "prettier": {
+    "useTabs": true,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": false
+  },
   "devDependencies": {
     "ava": "^0.22.0",
     "babel-cli": "^6.26.0",

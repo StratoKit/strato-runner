@@ -33,7 +33,9 @@ export const registerPlugins = (plugins, forceName) => {
 		if (forceName) {
 			registerPlugin(forceName, plugins)
 		} else {
-			throw new Error('Can only use a Promise for a plugin in {pluginName: <Promise for plugin "pluginName">} form')
+			throw new Error(
+				'Can only use a Promise for a plugin in {pluginName: <Promise for plugin "pluginName">} form'
+			)
 		}
 	} else if (typeof plugins === 'object') {
 		for (const name of Object.keys(plugins)) {
