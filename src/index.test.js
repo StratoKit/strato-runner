@@ -1,9 +1,10 @@
 // In theory we should be testing without transpiling from ava
 // But plugins.js transpiling works now and it's annoying to keep transpiling separate
 // Once something ava-webpack comes out we can use that
+import {join} from 'path'
 import test from 'ava'
 
-process.chdir('tests/test-project')
+process.chdir(join(process.cwd(), 'tests/test-project'))
 
 test('initial config', t => {
 	const config = require('./config').default

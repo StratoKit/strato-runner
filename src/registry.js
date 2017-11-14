@@ -55,23 +55,26 @@ if (config.babel.transpilePlugins) {
 	startTranspile(config.babel.options)
 }
 
-const tryLoad = path => {
-	try {
-		require.resolve(path)
-	} catch (err) {
-		if (err.code !== 'MODULE_NOT_FOUND') throw err
-		return
-	}
-	const module = require(path)
-	return (module && module.default) || module
-}
-
 // Optionally, the user can require plugins in `/plugins`
 // If under webpack, this is aliased to _stratokit_plugins
-const userPlugins =
-	tryLoad('_stratokit_plugins') || tryLoad(process.cwd() + '/plugins')
-if (userPlugins) {
-	registerPlugins(userPlugins)
+let pluginsPath
+
+try {
+	pluginsPath = require.resolve('_stratokit_plugins')
+} catch (err) {
+	if (err.code !== 'MODULE_NOT_FOUND') throw err
+
+	try {
+		pluginsPath = require.resolve(process.cwd() + '/plugins')
+	} catch (err) {
+		if (err.code !== 'MODULE_NOT_FOUND') throw err
+	}
+}
+
+if (pluginsPath) {
+	dbg(`loading plugins from ${pluginsPath}`)
+	const userPlugins = require(pluginsPath)
+	registerPlugins((userPlugins && userPlugins.default) || userPlugins)
 }
 
 export default registry

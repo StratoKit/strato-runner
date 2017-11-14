@@ -1,3 +1,6 @@
+// uncomment this to test import failure detection - should fail
+// require('farstarst')
+
 const state = {
 	loadCount: 0,
 	startCount: 0,
