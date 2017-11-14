@@ -1,6 +1,5 @@
 const fs = require('fs-extra')
 
-
 module.exports.commands = {
 	build: {
 		desc: 'Build Stratokit',
@@ -27,6 +26,6 @@ module.exports.commands = {
 
 	test: {
 		args: {watch: {type: 'flag'}},
-		run: (exec, {watch}) => exec(`ava ${watch ? '--watch' : ''} `),
+		run: (exec, {watch}) => exec(`ava --color ${watch ? '--watch' : ''} `),
 	},
 }
