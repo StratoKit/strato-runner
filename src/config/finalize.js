@@ -1,5 +1,6 @@
 // Load the user configuration and post-process
 
+const path = require('path')
 const processConfig = require('./processConfig')
 
 const finalize = config => {
