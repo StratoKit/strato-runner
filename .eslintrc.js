@@ -38,6 +38,7 @@ module.exports = {
 		'brace-style': 0,
 		'capitalized-comments': 0,
 		'comma-dangle': 0,
+		'function-paren-newline': 0,
 		'max-statements-per-line': 0,
 		'no-eq-null': 0,
 		'no-extra-semi': 0,

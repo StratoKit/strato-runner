@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import debug from 'debug'
 import config from './config'
 import registry from './registry'
