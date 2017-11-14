@@ -3,7 +3,7 @@ import config from './config'
 import startTranspile from './transpile/startTranspile'
 
 const dbg = debug('stratokit/registry')
-export const registry = {}
+const registry = {}
 
 const registerPlugin = (name, plugin) => {
 	if (name === 'default') {
@@ -54,20 +54,22 @@ export const registerPlugins = (plugins, forceName) => {
 if (config.babel.transpilePlugins) {
 	startTranspile(config.babel.options)
 }
-let userPlugins
-try {
-	// Optionally, the user can require plugins in `config/plugins.js`
-	// If under webpack, this is part of the entry, and if not it will be run only once
-	userPlugins = require(process.cwd() + '/config/plugins')
-	userPlugins = (userPlugins && userPlugins.default) || userPlugins
-} catch (err) {
-	if (
-		!(err.code === 'MODULE_NOT_FOUND' && /.config.plugins'/.test(err.message))
-	) {
-		throw err
+
+const tryLoad = path => {
+	try {
+		require.resolve(path)
+	} catch (err) {
+		if (err.code !== 'MODULE_NOT_FOUND') throw err
+		return
 	}
+	const module = require(path)
+	return (module && module.default) || module
 }
 
+// Optionally, the user can require plugins in `/plugins`
+// If under webpack, this is aliased to _stratokit_plugins
+const userPlugins =
+	tryLoad('_stratokit_plugins') || tryLoad(process.cwd() + '/plugins')
 if (userPlugins) {
 	registerPlugins(userPlugins)
 }

@@ -11,9 +11,8 @@ module.exports = [
 		config: {
 			state,
 		},
-		load: ({config, plugin}) => {
+		load: ({config}) => {
 			config.state.loadCount++
-			plugin.requires.push('name')
 		},
 		start: async ({config}) => {
 			config.state.startCount++
@@ -27,8 +26,10 @@ module.exports = [
 			config: {
 				state2: state,
 			},
-			load: async ({config}) => {
+			load: async ({config, plugin}) => {
 				config.state2.loadCount++
+				// Test adding deps during load
+				// plugin.requires.push('name')
 			},
 			start: ({config}) => {
 				config.state2.startCount++
@@ -37,7 +38,17 @@ module.exports = [
 	],
 	false,
 	{
-		name: {name: 'name', config: {name: true}},
-		promise: Promise.resolve({name: 'promise', config: {promise: true}}),
+		name: {
+			name: 'name',
+			config: {
+				name: true,
+			},
+		},
+		promise: Promise.resolve({
+			name: 'promise',
+			config: {
+				promise: true,
+			},
+		}),
 	},
 ]
