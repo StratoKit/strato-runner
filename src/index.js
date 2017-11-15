@@ -89,7 +89,7 @@ const loadRecurse = async plugin => {
 
 	if (plugin.load) {
 		dbg(`loading plugin ${plugin.name}`)
-		await plugin.load({config, plugin})
+		await plugin.load({config, plugin, plugins})
 	}
 
 	plugin.loaded = true
@@ -105,7 +105,7 @@ const startRecurse = async plugin => {
 
 	if (plugin.start) {
 		dbg(`starting plugin ${plugin.name}`)
-		await plugin.start({config, plugin})
+		await plugin.start({config, plugin, plugins})
 	}
 	plugin.started = true
 }

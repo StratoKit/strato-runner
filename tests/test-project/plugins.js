@@ -14,10 +14,18 @@ module.exports = [
 		config: {
 			state,
 		},
-		load: ({config}) => {
+		load: ({config, plugin, plugins}) => {
+			if (!plugin || plugin.name !== 'test')
+				throw new Error('Did not get plugin arg')
+			if (!plugins || plugins.test2.name !== 'test2')
+				throw new Error('Did not get plugins arg')
 			config.state.loadCount++
 		},
-		start: async ({config}) => {
+		start: async ({config, plugin, plugins}) => {
+			if (!plugin || plugin.name !== 'test')
+				throw new Error('Did not get plugin arg')
+			if (!plugins || plugins.test2.name !== 'test2')
+				throw new Error('Did not get plugins arg')
 			config.state.startCount++
 		},
 	},
