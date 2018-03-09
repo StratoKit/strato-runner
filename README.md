@@ -139,3 +139,74 @@ This will be done via `makfy` probably.
   * There should maybe be `hooks` and `events` descriptions, or at least something that you can read with a makfy command to know what to hook into, or maybe just a Readme.md.
 * Plugins request NPM dependencies for the project, depending on configuration. This means that you don't need to manage eslint dependencies yourself, and you don't need to install dependencies you won't be using.
 * You can also wrap a plugin, simply load it yourself and return augmented plugin object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Thoughts to be integrated
+
+* This also means that all config files should be immutably loaded so they can always be merged
+* The difference between server and browser builds is simply that on server the config files are marked external and are read at runtime. The browser has a copy in the bundle
+* The application entry point is a plugin
+* To run, `stratokit run (pluginfile.js|pluginname)`
+* To build a bundle, the webpack entry point is a loader that loads stratokit and then starts the named plugin
+
+### Config
+
+* config should be self-documenting
+* Instead of reading files, they should be require()d so that updates are incorporated in hot reloads
+* config is merged and lazy evaluated. This ensures correct config values are used at evaluation time.
+* we're dropping confippet
+* every plugin's config module returns object with config keys
+* they're all pushed onto a `configs` stack with location info (e.g. plugin name, filename); this clears the value cache
+  * in dev mode, the types are extracted from the ops into a separate propTypes object
+  * types that override 
+* environment variables are added to config by an environment plugin that gets loaded before starting an app by the run/webpack plugins
+* to check existance of a value, call `stratokit.config.has(path)`
+* to get a value, call `stratokit.config.get(path)`
+* this will recursively and synchronously merge from the configs stack
+  * scalars, functions, Dates and arrays are final values
+  * objects with a single key that starts with a `$opname` define an operation
+    * this calls `stratokit.configOps[opname].op` and replaces the object with the return value (this can recurse)
+    * to have a single key that starts with `$` you have to write `$$` and it will be escaped
+    * all other objects are left unchanged and simply merged
+  * for custom merging, use ops, e.g. `{$append: [1, 2]}` would result in `[...prevValue, 1, 2]`
+  * `get` resulting in the wrong type throws
+  * `get` on an undefined path throws
+  * `get('')` gets the entire configuration
+* the operations are pluggable by defining them under `stratokit.configOps`:
+  * `[opName]: {description, op, inType, type, ignorePrev}`
+  * `description`: required string, describes the op
+  * `op({value, prevValue, config, path, location})`: required function, called to get the value replacing the object
+    * ops functions are treated as pure and idempotent - they should not change any value they're given
+    * `prevValue` is the result of `get` on the previous config object. Use this for merging.
+    * `config` is the stratokit config object
+    * `path` is the current config path
+    * `location` is the config object location, for debugging etc
+  * `inType`: optional propType function (from `prop-types` module) to verify value type
+  * `type`: optional propType function to verify final result
+  * `typeFn({value})`: optional factory for `type`
+  * `ignorePrev`: bool, don't provide the previous value, for optimization
+* ops examples
+  * ``{$op: {op:({config}) => `bar ${config.get('hi')}`}`` (can be used in .js config files for in-place custom ops)
+  * `{${}: "bar {{hi}}"}`
+  * `{$insertBefore: {match: o => o.tag === 'SSR', value: {tag: 'graphql', init: initFn}}}`
+  * plugins can define defaults with e.g. `foo: {$def: {type: propTypes.bool, description: 'do foo', default: true}}`
+    * the op is: `def: {description: 'define a default value', op: ({value, path})=>{storeDesc(path, value.description);return value.default}, ignorePrev: true, typeFn: ({value})=>value.type}`
+      * and then `storeDesc` stores the description somewhere for querying the configuration via the plugin that defines `def`
+* config values are immutable
+  * for mutable configuration objects, plugins should provide accessor functions, e.g. `const hooks = config.get('express.getHooks')()` (but probably hooks can be configured statically?)
