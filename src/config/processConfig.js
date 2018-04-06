@@ -1,15 +1,24 @@
 // From https://github.com/electrode-io/electrode-confippet/blob/master/lib/process-config.js
 'use strict'
 
-const _ = require('lodash')
+const {
+	each,
+	isObjectLike,
+	get,
+	isFunction,
+	isUndefined,
+	isString,
+	isEmpty,
+	defaults,
+} = require('lodash')
 const fs = require('fs')
 
 function processObj(obj, data) {
 	const depthPath = data.depth.join('.')
 	const {config, context} = data
 
-	_.each(obj, (value, key) => {
-		if (_.isObjectLike(value)) {
+	each(obj, (value, key) => {
+		if (isObjectLike(value)) {
 			data.depth.push(key)
 			processObj(value, data)
 			data.depth.pop()
@@ -24,9 +33,9 @@ function processObj(obj, data) {
 				return path.substr(1)
 			}
 
-			const x = _.get(context, path)
+			const x = get(context, path)
 
-			if (_.isFunction(x)) {
+			if (isFunction(x))
 				return x({
 					context,
 					config,
@@ -38,24 +47,24 @@ function processObj(obj, data) {
 					depthPath,
 					resolve,
 				})
-			} else if (_.isUndefined(x)) {
+			if (isUndefined(x)) {
 				data.missing.push({path: `${depthPath}.${key}`, value, tmpl})
 				return ''
 			}
-			return params.length ? `${x}${params.map(resolve).join('')}` : x
+			return params.length ? `${x}${params.map(x => resolve(x)).join('')}` : x
 		}
 
-		if (_.isString(value)) {
-			if (/^\{\{.*}}$/.test(value)) {
+		if (isString(value)) {
+			if (/^\{\{[^}]+}}$/.test(value)) {
 				const newV = resolve(value.slice(2, -2))
 				obj[key] = newV
-				if (typeof newV === 'string' && _.includes(newV, '{{')) {
+				if (typeof newV === 'string' && newV.includes('{{')) {
 					data.more++
 				}
-			} else if (_.includes(value, '{{')) {
+			} else if (value.includes('{{')) {
 				obj[key] = value.replace(/\{\{([^}]+)}}/g, (match, tmpl) => {
 					const newV = resolve(tmpl)
-					if (typeof newV === 'string' && _.includes(newV, '{{')) {
+					if (typeof newV === 'string' && newV.includes('{{')) {
 						data.more++
 					}
 					return newV
@@ -66,7 +75,7 @@ function processObj(obj, data) {
 }
 
 function processConfig(config, options) {
-	if (_.isEmpty(config)) {
+	if (isEmpty(config)) {
 		return []
 	}
 
@@ -102,7 +111,7 @@ function processConfig(config, options) {
 		},
 	}
 
-	_.defaults(context, options.context)
+	defaults(context, options.context)
 
 	const data = {
 		config,
