@@ -1,0 +1,91 @@
+webpack:
+  # on which prefix will the build files be available
+  publicPath: '/_'
+
+  # TODO partly share with `run` plugin and merge
+  alias:
+    app: '{{config.paths.app}}'
+    assets: '{{config.paths.assets}}'
+    state: '{{config.paths.state}}'
+
+    # TODO alias function?
+    # Optimize lodash-es, everybody should use lodash
+    lodash-es: 'lodash'
+    # See https://github.com/lodash/lodash-webpack-plugin/issues/101
+    lodash.flatten: 'lodash/flatten'
+    lodash.pick: 'lodash/pick'
+    lodash.keys: 'lodash/keys'
+    lodash.isarguments: 'lodash/isArguments'
+    lodash.isarray: 'lodash/isArray'
+    lodash._getnative: 'lodash/_getnative'
+
+  use:
+    urlLoader: 1000
+    css:
+      enabled: true
+      sass: true
+      modules: true
+      autoprefixer: true
+    svgo:
+      enabled: true
+
+  extensions:
+    json: [json]
+    yaml: [yaml]
+    raw: [txt]
+    assets: [png, jpg, jpeg, gif, ttf, eot, woff, woff2, mp3, wav, svg]
+    css: [css, scss, sass]
+    svg: [svg]
+    sass: [scss, sass]
+    js: [js, jsx]
+
+  # build-time globals. For run-time globals, you need to use redux or script tags
+  defines:
+    __IN_WEBPACK__: true
+    __CONFIG__:
+      name: '{{config.appName}}'
+      version: '{{config.version}}'
+      graphiql: '{{config.stratokit.graphiql}}'
+
+  # any loaders you like
+  loaders: []
+
+  # these keys add to the default config. TODO
+  # eg. assets: {exclude: 'foo', loader: 'bar'}
+  # or. assets: {replaceExclude: 'foo', replaceLoader: 'bar'}
+  loaderConfig: {}
+
+npm:
+  devDependencies:
+    assets-webpack-plugin: ^3.5.1
+    autoprefixer: ^7.1.1
+    babel-loader: ^7.0.0
+    babel-plugin-lodash: ^3.2.11
+    babel-plugin-styled-components: ^1.1.4
+    css-loader: ^0.28.4
+    extract-text-webpack-plugin: ^2.1.0
+    file-loader: ^0.11.1
+    json-loader: '*'
+    yaml-loader: '*'
+
+    node-sass: ^4.5.3
+    null-loader: 0.1.1
+    postcss-loader: '1'
+    postcss-modules-values: 1.2.2
+    raw-loader: 0.5.1
+    react-hot-loader: next
+    redbox-react: ^1.3.7
+
+    # TODO see how it's coming along
+    # hard-source-webpack-plugin: ^0.3.12
+    # node-object-hash: ^1.2.0
+
+  dependencies:
+    unused-files-webpack-plugin: ^3.0.1
+    url-loader: ^0.5.8
+    webpack: ^2.6.1
+    webpack-bundle-analyzer: ^2.8.2
+    webpack-cleanup-plugin: '*'
+    webpack-dev-middleware: ^1.10.2
+    webpack-hot-middleware: ^2.18.0
+    webpack-node-externals: ^1.6.0

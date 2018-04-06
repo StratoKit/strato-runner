@@ -1,0 +1,14 @@
+{
+  "stratokit": {
+    "webpack": {
+      "defines": {
+        "module.hot": false
+      },
+      "use": {
+        "css": {
+          "extract": true
+        }
+      }
+    }
+  }
+}

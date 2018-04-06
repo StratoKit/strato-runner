@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/plugins/webpack/index.js"],"names":["name","version","config"],"mappings":";;;;;;AAAA;;;;;;kBAEe;AACdA,OAAM,SADQ;AAEdC,UAAS,OAFK;AAGdC;AAHc,C","file":"index.js","sourcesContent":["import config from './config'\n\nexport default {\n\tname: 'webpack',\n\tversion: '0.5.0',\n\tconfig,\n}\n"]}
