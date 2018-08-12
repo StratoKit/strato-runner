@@ -1,9 +1,0 @@
-stratokit:
-  webpack:
-    defines:
-      # Tiny profit after uglify :)
-      module.hot: false
-    use:
-      css:
-        # If using CSS, extract to file
-        extract: true

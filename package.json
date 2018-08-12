@@ -12,40 +12,36 @@
     "dist"
   ],
   "scripts": {
-    "build": "makfy build",
-    "test": "makfy test"
+    "start": "nps",
+    "build": "nps build",
+    "test": "nps test"
   },
-  "ava": {
-    "files": [
-      "src/**/*.test.js"
-    ],
-    "source": [
-      "src/**/*.(js|yaml)"
-    ],
-    "babel": "inherit",
-    "require": [
-      "babel-register"
+  "jest": {
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "<rootDir>/dist/",
+      "<rootDir>/node_modules/",
+      "_helpers.js"
     ]
   },
-  "prettier": {
-    "useTabs": true,
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "bracketSpacing": false
-  },
   "devDependencies": {
-    "ava": "^0.23.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.2",
-    "eslint": "^4.11.0",
-    "eslint-config-xo": "^0.19.0",
-    "eslint-plugin-ava": "^4.2.2",
-    "eslint-plugin-babel": "^4.1.1",
+    "debug": "^3.1.0",
+    "eslint": "^5.3.0",
+    "eslint-config-xo": "^0.24.1",
+    "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jest": "^21.21.0",
     "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-unicorn": "^3.0.0",
-    "js-yaml": "^3.10.0"
+    "eslint-plugin-unicorn": "^5.0.0",
+    "expect": "^23.5.0",
+    "jest": "^23.5.0",
+    "lodash": "^4.17.10",
+    "nps-utils": "^1.6.0"
+  },
+  "peerDependencies": {
+    "lodash": "^4.17.10"
   },
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -53,7 +49,8 @@
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "electrode-confippet": "^1.5.0",
-    "fs-extra": "^4.0.2",
-    "makfy": "^1.2.0"
+    "fs-extra": "^7.0.0",
+    "js-yaml": "^3.10.0",
+    "prop-types": "^15.6.2"
   }
 }

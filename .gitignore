@@ -1,6 +1,5 @@
 .DS_Store
-/.makfy-cache
+/coverage
 node_modules
-npm-debug.log
-yarn-error.log
+pnpm-debug.log
 /dist

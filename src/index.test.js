@@ -2,31 +2,30 @@
 // But plugins.js transpiling works now and it's annoying to keep transpiling separate
 // Once something ava-webpack comes out we can use that
 import {join} from 'path'
-import test from 'ava'
 
 process.chdir(join(process.cwd(), 'tests/test-project'))
 
-test('initial config', t => {
+test('initial config', () => {
 	const config = require('./config').default
-	t.snapshot(config)
+	expect(config).toMatchSnapshot()
 })
 
-test('initial registry', t => {
+test('initial registry', () => {
 	const registry = require('./registry').default
-	t.snapshot(registry)
+	expect(registry).toMatchSnapshot()
 })
 
-test('start', async t => {
+test('start', async () => {
 	const {start, stop, plugins, config} = require('.').default
 	await start('test')
-	t.is(plugins.test.started, true)
-	t.is(config.state.loadCount, 1)
-	t.is(config.state.startCount, 1)
-	t.is(config.state2.loadCount, 1)
-	t.is(config.state2.startCount, 1)
-	t.true(config.promise)
+	expect(plugins.test.started).toBe(true)
+	expect(config.state.loadCount).toBe(1)
+	expect(config.state.startCount).toBe(1)
+	expect(config.state2.loadCount).toBe(1)
+	expect(config.state2.startCount).toBe(1)
+	expect(config.promise).toBe(true)
 	await stop('test')
 	await start('test')
-	t.is(config.state2.loadCount, 1)
-	t.is(config.state2.startCount, 2)
+	expect(config.state2.loadCount).toBe(1)
+	expect(config.state2.startCount).toBe(2)
 })
