@@ -1,6 +1,6 @@
 # StratoKit: Highly modular NodeJS project framework
 
-# TODO
+# TODO This is not correct yet
 
 After consideration:
 
@@ -8,11 +8,11 @@ Plugins should not be registered in a `plugins.js` file. Maybe that can be optio
 
 Stratokit provides these services:
 
-  * declarative project configuration, for npm, plugins, app, transpilation
-    * loading the config/* from disk is only for when running under node; the browser config goes via defines, initial state or global vars
-  * plugin management (TODO add helpers for hooks, see how webpack does it)
-  * transpilation
-  * CLI tool to manage project meta files (package.json, eslint, ...) (TODO)
+- declarative project configuration, for npm, plugins, app, transpilation
+  - loading the config/\* from disk is only for when running under node; the browser config goes via defines, initial state or global vars
+- plugin management (TODO add helpers for hooks, see how webpack does it)
+- transpilation
+- CLI tool to manage project meta files (package.json, eslint, ...) (TODO)
 
 A run plugin would configure npm script lines to run a given file as a plugin `start()`, or a plugin.
 
@@ -30,26 +30,25 @@ Also, the transpilation part should be a separate package, because it is not nee
 
 # _the below content does not yet fully reflect the above_
 
-
 ## Intro
 
 StratoKit is a runner engine and a collection of plugins.
 
 StratoKit enables:
 
-* Using the latest Javascript features in the browser and on the server (using BabelJS)
-* Hot Module Reloading, both in the browser and on the server, for a great dev experience (using Webpack)
-* Optimized production builds for browser and server
-* Plugins, both from packages and from the project
-* Declarative, DevOps-friendly configuration
+- Using the latest Javascript features in the browser and on the server (using BabelJS)
+- Hot Module Reloading, both in the browser and on the server, for a great dev experience (using Webpack)
+- Optimized production builds for browser and server
+- Plugins, both from packages and from the project
+- Declarative, DevOps-friendly configuration
 
 Stratokit's goals are:
 
-* **No boilerplate**
-* **No technology religion**
-* Simple setup
-* Easy reuse of plugins across projects
-* Easy upgrades to plugins and Stratokit without project changes
+- **No boilerplate**
+- **No technology religion**
+- Simple setup
+- Easy reuse of plugins across projects
+- Easy upgrades to plugins and Stratokit without project changes
 
 This should result in projects that are developed faster with higher quality and are easy to maintain.
 
@@ -79,40 +78,43 @@ WIP, we have a plugin system and are making plugins for building React+Redux+Gra
 
 The configuration of the project is loaded as follows:
 
-* init config: prepare the `config` object with defaults and register basic plugins
-* user config: load the `/config` folder, courtesy of `electrode-confippet`
-* transpiling: `require()` transpilation is set up (according to `config`)
-* plugins: load the `/config/plugins` file, this returns registered plugins
-  * this must be done with `require` or `import` statements so WebPack can track the dependencies for the production NodeJS build
-  * Maybe we make have a webpack yaml loader that allows specifying requires
-  * Each level of this return value can be:
-    * an array of plugins to add
-    * an object with `name: plugin` mappings (useful for renames)
-      * in this case you can also return a promise
-    * a falsy value, which is ignored. Useful for `!__CLIENT__ && import('express')`
-  * a plugin is an object with `name<String>` (required) and optional `requires<[String]>`, `config<Object>`, `load<async Fn>`, `start<async Fn>`, `stop<async Fn>`. Anything else is an error.
-* Plugins can specify plugins they depend on, by name, in the `requires` array
+- init config: prepare the `config` object with defaults and register basic plugins
+- user config: load `/config`, `/config/$NODE_ENV`, `/config/local` when running on Node
+- transpiling: `require()` transpilation is set up (according to `config`)
+- plugins: load `/plugins`, this returns registered plugins
+  - this must be done with `require` or `import` statements so WebPack can track the dependencies for the production NodeJS build
+  - Maybe we make have a webpack yaml loader that allows specifying requires
+  - Each level of this return value can be:
+    - an array of plugins to add
+    - an object with `name: plugin` mappings (useful for renames)
+    - a falsy value, which is ignored. Useful for `!__CLIENT__ && require('stratokit-express')`
+  - a plugin is an object with `name<String>` (required) and optional `requires<Function|[String]>`, `config<Object>`, `load<async Fn>`, `start<async Fn>`, `stop<async Fn>`. Anything else is an error.
+- Plugins can specify plugins they depend on, by name, in the `requires` array|fn
+  - if `requires` is a function it gets called with the current config and it should return an array of plugin names
+- the default plugin is `main` - `stratokit run` will start `main`
 
 ### Load
 
 When you start a plugin, it is first loaded along with all its dependencies. Steps:
 
-* configure: recursively:
-  * for this plugin + all plugins in `requires`, merge their `config` with the global `config`
-* resolve all template interpolations in `config` - from now on all data in `config` is resolved
-* load: recursively:
-  * load the plugins named in `deps`, in order (so depth-first loading)
-  * await `plugin.load(stratokit)` function if there is one
-  * the load function sets up shared objects in the `stratokit` object, including maybe changing the `config`
-  * TODO dynamically marking plugins as deps: extra deps will be loaded and added to deps
+- configure: recursively:
+
+  - for this plugin + all plugins in `requires`, merge their `config` with the global `config`
+
+- resolve all template interpolations in `config` - from now on all data in `config` is resolved
+- load: recursively:
+  - load the plugins named in `deps`, in order (so depth-first loading)
+  - await `plugin.load(stratokit)` function if there is one
+  - the load function sets up shared objects in the `stratokit` object, including maybe changing the `config`
+  - TODO dynamically marking plugins as deps: extra deps will be loaded and added to deps
 
 ### Start
 
 When starting a plugin, it is first loaded as above. This means:
 
-* load config (as described above)
-* start: same as load, but with the start function
-  * start and load are separated so dependent plugins can hook into whatever mechanism the dependee plugin provides
+- load config (as described above)
+- start: same as load, but with the start function
+  - start and load are separated so dependent plugins can hook into whatever mechanism the dependee plugin provides
 
 ### Running scripts
 
@@ -134,79 +136,71 @@ This will be done via `makfy` probably.
 
 ## Plugins
 
-* Plugins can be anything that resolves to a plugin object in the configuration. They can be NPM modules that import more plugins, files in your project, and even a simple object in your `config/plugins`
-* To communicate between plugins, the can use any mechanism.
-  * There should maybe be `hooks` and `events` descriptions, or at least something that you can read with a makfy command to know what to hook into, or maybe just a Readme.md.
-* Plugins request NPM dependencies for the project, depending on configuration. This means that you don't need to manage eslint dependencies yourself, and you don't need to install dependencies you won't be using.
-* You can also wrap a plugin, simply load it yourself and return augmented plugin object
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Plugins can be anything that resolves to a plugin object in the configuration. They can be NPM modules that import more plugins, files in your project, and even a simple object in your `config/plugins`
+- To communicate between plugins, the can use any mechanism.
+  - There should maybe be `hooks` and `events` descriptions, or at least something that you can read with a makfy command to know what to hook into, or maybe just a Readme.md.
+- Plugins request NPM dependencies for the project, depending on configuration. This means that you don't need to manage eslint dependencies yourself, and you don't need to install dependencies you won't be using.
+- You can also wrap a plugin, simply load it yourself and return augmented plugin object
 
 ## Thoughts to be integrated
 
-* This also means that all config files should be immutably loaded so they can always be merged
-* The difference between server and browser builds is simply that on server the config files are marked external and are read at runtime. The browser has a copy in the bundle
-* The application entry point is a plugin
-* To run, `stratokit run (pluginfile.js|pluginname)`
-* To build a bundle, the webpack entry point is a loader that loads stratokit and then starts the named plugin
+- This also means that all config files should be immutably loaded so they can always be merged
+- The difference between server and browser builds is simply that on server the config files are marked external and are read at runtime. The browser has a copy in the bundle
+- The application entry point is a plugin
+- To run, `stratokit run (pluginfile.js|pluginname)`
+- To build a bundle, the webpack entry point is a loader that loads stratokit and then starts the named plugin
 
 ### Config
 
-* config should be self-documenting
-* Instead of reading files, they should be require()d so that updates are incorporated in hot reloads
-* config is merged and lazy evaluated. This ensures correct config values are used at evaluation time.
-* we're dropping confippet
-* every plugin's config module returns object with config keys
-* they're all pushed onto a `configs` stack with location info (e.g. plugin name, filename); this clears the value cache
-  * in dev mode, the types are extracted from the ops into a separate propTypes object
-  * types that override 
-* environment variables are added to config by an environment plugin that gets loaded before starting an app by the run/webpack plugins
-* to check existance of a value, call `stratokit.config.has(path)`
-* to get a value, call `stratokit.config.get(path)`
-* this will recursively and synchronously merge from the configs stack
-  * scalars, functions, Dates and arrays are final values
-  * objects with a single key that starts with a `$opname` define an operation
-    * this calls `stratokit.configOps[opname].op` and replaces the object with the return value (this can recurse)
-    * to have a single key that starts with `$` you have to write `$$` and it will be escaped
-    * all other objects are left unchanged and simply merged
-  * for custom merging, use ops, e.g. `{$append: [1, 2]}` would result in `[...prevValue, 1, 2]`
-  * `get` resulting in the wrong type throws
-  * `get` on an undefined path throws
-  * `get('')` gets the entire configuration
-* the operations are pluggable by defining them under `stratokit.configOps`:
-  * `[opName]: {description, op, inType, type, ignorePrev}`
-  * `description`: required string, describes the op
-  * `op({value, prevValue, config, path, location})`: required function, called to get the value replacing the object
-    * ops functions are treated as pure and idempotent - they should not change any value they're given
-    * `prevValue` is the result of `get` on the previous config object. Use this for merging.
-    * `config` is the stratokit config object
-    * `path` is the current config path
-    * `location` is the config object location, for debugging etc
-  * `inType`: optional propType function (from `prop-types` module) to verify value type
-  * `type`: optional propType function to verify final result
-  * `typeFn({value})`: optional factory for `type`
-  * `ignorePrev`: bool, don't provide the previous value, for optimization
-* ops examples
-  * ``{$op: {op:({config}) => `bar ${config.get('hi')}`}`` (can be used in .js config files for in-place custom ops)
-  * `{${}: "bar {{hi}}"}`
-  * `{$insertBefore: {match: o => o.tag === 'SSR', value: {tag: 'graphql', init: initFn}}}`
-  * plugins can define defaults with e.g. `foo: {$def: {type: propTypes.bool, description: 'do foo', default: true}}`
-    * the op is: `def: {description: 'define a default value', op: ({value, path})=>{storeDesc(path, value.description);return value.default}, ignorePrev: true, typeFn: ({value})=>value.type}`
-      * and then `storeDesc` stores the description somewhere for querying the configuration via the plugin that defines `def`
-* config values are immutable
-  * for mutable configuration objects, plugins should provide accessor functions, e.g. `const hooks = config.get('express.getHooks')()` (but probably hooks can be configured statically?)
+#### Requirements:
+
+- config should be self-documenting
+- Instead of reading files, they should be require()d so that updates are incorporated in hot reloads
+- config is merged and lazy evaluated. This ensures correct config values are used at evaluation time.
+- we're dropping confippet
+- plugin definitions contain the config
+- they're all pushed onto a `configs` stack with location info (e.g. plugin name, filename); this clears the value cache
+  - in dev mode, the types are extracted from the ops into a separate propTypes object
+  - types that override
+- environment variables are added to config by an environment plugin that gets loaded before starting an app by the run/webpack plugins
+- to check existance of a value, call `stratokit.config.has(path)`
+- to get a value, call `stratokit.config.get(path)`
+- this will recursively and synchronously merge from the configs stack
+  - scalars, functions, Dates and arrays are final values
+  - objects with a single key that starts with a `$opname` define an operation
+    - this calls `stratokit.configOps[opname].op` and replaces the object with the return value (this can recurse)
+    - to have a single key that starts with `$` you have to write `$$` and it will be escaped
+    - all other objects are left unchanged and simply merged
+  - for custom merging, use ops, e.g. `{$append: [1, 2]}` would result in `[...prevValue, 1, 2]`
+  - `get` on an undefined path throws
+  - `get('')` gets the entire configuration, deeply
+  - in non-production mode, `get('')` is run and verified against the proptypes, throwing if wrong
+- the operations are pluggable by defining them under `_ops`:
+  - `[opName]: {description, op, inType, type}`
+  - `description`: required string, describes the op
+  - `op({value, getPrevValue(), config, path, location})`: required function, called to get the value replacing the object
+    - ops functions are treated as pure and idempotent - they should not change any value they're given
+    - `getPrevValue` returns `get(path)` on the previous config object. Use this for merging.
+    - `config` is the stratokit config object
+    - `path` is the current config path
+    - `location` is the config object location, for debugging etc
+  - `inType`: optional propType function (from `prop-types` module) to verify value type
+  - `type`: optional propType function to verify final result
+  - `typeFn({value})`: optional factory for `type`
+- ops examples
+  - `` {$op: {op:({config}) => `bar ${config.get('hi')}`} `` (can be used in .js config files for in-place custom ops)
+  - `{${}: "bar {{hi}}"}`
+  - `{$insertBefore: {match: o => o.tag === 'SSR', value: {tag: 'graphql', init: initFn}}}`
+  - plugins can define defaults with e.g. `foo: {$def: {type: propTypes.bool, description: 'do foo', default: true}}`
+    - the op is something like: `def: {description: 'define a default value', op: ({value, path})=>{storeDesc(path, value[0]);return value[1]}, ignorePrev: true, typeFn: ({value})=>value.type}`, and also accepts [desc, type, value]
+      - and then `storeDesc` stores the description somewhere for querying the configuration via the plugin that defines `def`
+- config values are immutable
+  - for mutable configuration objects, plugins should provide accessor functions, e.g. `const hooks = config.get('express.getHooks')()` (but probably hooks can be configured statically?), or otherwise you should be able to get a plugin by name and access methods etc directly (singleton then though, can't have 2 plugin instances in same app)
+
+#### Implementation
+
+`Config` is a class that is fed configuration objects. Configurations can be added/removed, and values are calculated lazily.
+
+The filesystem/env configurations are special overrides that should always be applied, they are added with higher priority
+
+The `config` given at the start of the app is the `Config` instance with `plugins` added.

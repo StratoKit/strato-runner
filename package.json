@@ -48,7 +48,6 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
-    "electrode-confippet": "^1.5.0",
     "fs-extra": "^7.0.0",
     "js-yaml": "^3.10.0",
     "prop-types": "^15.6.2"
