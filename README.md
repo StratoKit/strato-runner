@@ -1,10 +1,16 @@
 # StratoKit: Highly modular NodeJS project framework
 
-# TODO This is not correct yet
+# TODO This is not fully consistent yet
+
+To add: plugins should have an instance under config.plugins, and there should be some way to initialize that. Maybe load should return it, and not returning something truthy means failure?
+
+Also, sidenote, having a lazy config object with prioritized layers seems generally useful. I wonder if Nix can be implemented that way. (it uses per-value priorities though, implemented in Nixpkgs lib)
 
 After consideration:
 
-Plugins should not be registered in a `plugins.js` file. Maybe that can be optional. By registering them directly in the app, bundles only include the ones that are really needed. OTOH, how would you register project-only plugins like webpack and eslint? Using the require expansion in config?
+~~Plugins should not be registered in a `plugins.js` file. Maybe that can be optional. By registering them directly in the app, bundles only include the ones that are really needed. OTOH, how would you register project-only plugins like webpack and eslint? Using the require expansion in config?~~
+
+Register plugins in `/plugins` with imports and tree shaking can import only the needed ones. Also fall back to `stratoplug-${name}` module for undefined plugins. Building a plugin will then make an entry with the required imports and build that.
 
 Stratokit provides these services:
 
