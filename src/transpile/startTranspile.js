@@ -1,5 +1,5 @@
 const startTranspile = options => {
-	require('babel-register')({
+	require('@babel/register')({
 		...options,
 		babelrc: false,
 	})

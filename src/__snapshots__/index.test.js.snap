@@ -6,16 +6,16 @@ Object {
   "babel": Object {
     "options": Object {
       "plugins": Array [
-        "transform-object-rest-spread",
+        "@babel/plugin-proposal-object-rest-spread",
       ],
       "presets": Array [
         Array [
-          "env",
+          "@babel/preset-env",
           Object {
             "targets": Object {
               "node": "current",
             },
-            "useBuiltins": true,
+            "useBuiltIns": "usage",
           },
         ],
       ],
