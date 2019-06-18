@@ -64,6 +64,7 @@ const configureRecurse = async plugin => {
 
 	plugins[plugin.name] = plugin
 
+	// TODO getRequires(plugin) that can call a function with the config
 	const {requires = []} = plugin
 	for (const name of requires) {
 		const dep = await getPluginFromRegistry(name)
