@@ -197,7 +197,7 @@ This will be done via `makfy` probably.
 
 - keep plugins idea, BUT
 
-  - plugins self-register with stratokit, and can require other plugins they have strict dependencies on, but they still need to add them to requires by name
+  - plugins self-register with stratokit, and can `require()` other plugins they have strict dependencies on, but they still need to add them to `requires` by name
   - non-strict deps are still by name
   - to register, call `stratokit.register({name, config, requires, validate, load, start, stop, unload})` (extra props throw)
   - app entry points are simply scripts requiring plugins and then self-registering and starting
@@ -218,7 +218,7 @@ This will be done via `makfy` probably.
     - async unload({config, plugin, plugins, stop, unload})
       - the returned unload calls these functions and returns a promise for unload completion
 
-- keep config stack idea, BUT
+- [x] keep config stack idea, BUT
 
   - plugin configs are frozen and stored in an array
   - a value can be anything and is lazy-gotten via a recursive proxy
@@ -230,10 +230,9 @@ This will be done via `makfy` probably.
   - user config comes via env, added by runner and webpack and always last
   - loading plugins will extend the config, retaining the env at the end
   - other approaches
-  - like babel configuration, where you return an array of plugins with configurations, but they don't have access to the main configuration? and they don't have access to other plugins?
-  - or calling config functions with the previous object, but then you can't read values from subsequent configs
+    - like babel configuration, where you return an array of plugins with configurations, but they don't have access to the main configuration? and they don't have access to other plugins?
+    - or calling config functions with the previous object, but then you can't read values from subsequent configs
   - API
-
     - makeConfig([configs]): returns LazyConfigStack instance: a recursive Proxy
 
 - export tapable interface
