@@ -4,7 +4,6 @@
 
 // We use YAML directly instead of converting to JSON because YAML can store more than JSON
 // like regexes and comments.
-// Besides, we already include it for confippet
 
 if (typeof __IN_WEBPACK__ === 'undefined' && require.extensions) {
 	var fs = require('fs')
