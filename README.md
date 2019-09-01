@@ -199,23 +199,25 @@ This will be done via `makfy` probably.
 
   - plugins self-register with stratokit, and can `require()` other plugins they have strict dependencies on, but they still need to add them to `requires` by name
   - non-strict deps are still by name
-  - to register, call `stratokit.register({name, config, requires, validate, load, start, stop, unload})` (extra props throw)
+  - to register, call `stratokit.register({name, config, requires, load, start, stop, unload})` (extra props throw)
   - app entry points are simply scripts requiring plugins and then self-registering and starting
   - to do dynamic dependencies, import and load plugins during load phase (don't forget to stop/unload)
   - phases:
     - sync registering (by the app and the plugins)
-    - async load({config, plugins, load, start}) (manually or by start)
+    - sync configure: resolve `requires(config)` functions or arrays
+      - if `requires` is a function, it gets the current `config`. It can register more plugins.
+    - async load({config, states, load, start}) (manually or by start)
       - Throw if there is a config problem (use proptypes if you like)
       - prepare things
       - this can actually register and load or even start more plugins, as long as there are no cycles
         - use the given functions so you share the config
-      - return a value which will be your entry instance in `plugins`
-      - stratokit.load(name, extraConfigs[]) calls these functions and returns a promise for `{config, plugins, start, unload}`
-    - async start({config, plugin, plugins, start})
-      - stratokit.start(name, extraConfigs[]) calls these functions and returns a promise for `{config, plugins, stop, unload}` after start completion
-    - async stop({config, plugin, plugins, stop})
-      - the returned stop calls these functions and returns a promise for `{config, plugins, start, unload}` after stop completion
-    - async unload({config, plugin, plugins, stop, unload})
+      - return a value which will be your entry instance in `states`
+      - stratokit.load(name, extraConfigs[]) calls these functions and returns a promise for `{config, states, start, unload}`
+    - async start({config, state, states, start})
+      - stratokit.start(name, extraConfigs[]) calls these functions and returns a promise for `{config, states, stop, unload}` after start completion
+    - async stop({config, state, states, stop})
+      - the returned stop calls these functions and returns a promise for `{config, states, start, unload}` after stop completion
+    - async unload({config, state, states, stop, unload})
       - the returned unload calls these functions and returns a promise for unload completion
 
 - [x] keep config stack idea, BUT
@@ -235,4 +237,20 @@ This will be done via `makfy` probably.
   - API
     - makeConfig([configs]): returns LazyConfigStack instance: a recursive Proxy
 
-- export tapable interface
+- [x] export tapable interface
+
+## Ideas
+
+- documentation: call some function to get some documentation of the config. Maybe simply an object with the same keys as the config, and leaves are functions that return description+type+validate.
+  - Add type registry with default validation functions?
+  - `stratokit config [path]` shows the config under path with descriptions, types, and current values
+  - errors could show from which config a value comes (can't pass through access functions though)
+    - resolve path the `config` that introduced it and find the plugin that has that `config` in the registry
+- if a plugin is not registered, try `require()` it? If it is then not in registry, throw.
+  - bonus points: `require` within the module scope of the calling file. Dark module magic.
+  - con: webpack won't like a `require()` without limitations
+    - better wait for webpack integration and figure it out then.
+- stratokit-cli package
+  - run: webpack build entry and start-server-webpack-plugin
+  - generate-files: boilerplate babelrc, eslintrc, prettierrc etc
+- allow plugging into the stratokit launcher stages to augment the launcher?
