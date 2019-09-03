@@ -1,5 +1,4 @@
 const {concurrent, rimraf} = require('nps-utils')
-const {version} = require('./package.json')
 
 const runBabel =
 	'NODE_ENV=production babel -s true --ignore __tests__ --ignore __snapshots__ -D -d dist/'
@@ -10,7 +9,6 @@ const scripts = {
 		clean: rimraf('dist/'),
 		babel: `${runBabel} src/`,
 		watch: `${runBabel} --watch src/`,
-		git: `sh build-git.sh v${version.split('.')[0]}`,
 	},
 	test: {
 		default: concurrent.nps('test.lint', 'test.full'),

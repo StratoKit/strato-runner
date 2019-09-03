@@ -1,14 +1,14 @@
 {
-  "name": "stratokit",
-  "version": "0.1.0",
-  "description": "Highly modular modern framework for NodeJS applications",
+  "name": "@stratokit/launcher",
+  "version": "1.0.0-rc1",
+  "description": "Highly modular plugin runner with lazy-evaluating configuration",
+  "keywords": ["plugin", "plugins", "config", "configuration", "lazy"],
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com/StratoKit/stratokit.git"
   },
   "main": "dist/index.js",
   "files": [
-    "config.js",
     "dist"
   ],
   "scripts": {
@@ -27,7 +27,13 @@
   },
   "devDependencies": {
     "@babel/cli": "latest",
+    "@babel/core": "7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "@babel/register": "latest",
     "babel-eslint": "10.0.3",
+    "core-js": "3.2.1",
     "debug": "4.1.1",
     "eslint": "6.3.0",
     "eslint-config-xo": "0.26.0",
@@ -39,22 +45,6 @@
     "eslint-plugin-unicorn": "10.0.0",
     "expect": "24.9.0",
     "jest": "24.9.0",
-    "lodash": "4.17.15",
     "nps-utils": "1.7.0"
-  },
-  "peerDependencies": {
-    "lodash": "^4.17.10"
-  },
-  "dependencies": {
-    "@babel/core": "7.5.5",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-proposal-object-rest-spread": "7.5.5",
-    "@babel/preset-env": "7.5.5",
-    "@babel/register": "latest",
-    "core-js": "3.2.1",
-    "electrode-confippet": "1.5.0",
-    "fs-extra": "8.1.0",
-    "js-yaml": "3.13.1",
-    "prop-types": "15.7.2"
   }
 }

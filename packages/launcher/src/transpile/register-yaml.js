@@ -7,7 +7,16 @@
 
 if (typeof __IN_WEBPACK__ === 'undefined' && require.extensions) {
 	var fs = require('fs')
-	var yaml = require('js-yaml')
+	var yaml
+	try {
+		yaml = require('js-yaml')
+	} catch (err) {
+		if (err.code === 'MODULE_NOT_FOUND') {
+			// eslint-disable-next-line no-console
+			console.error('To support Yaml loading, install js-yaml in your project')
+		}
+		throw err
+	}
 
 	var loadFile = function(module, filename) {
 		module.exports = yaml.safeLoad(fs.readFileSync(filename, 'utf-8'))

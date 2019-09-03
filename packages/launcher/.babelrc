@@ -1,0 +1,18 @@
+{
+	"presets": [
+		[
+			"@babel/preset-env",
+			{
+				"targets": {
+					"node": "7.10"
+				},
+				"useBuiltIns": "usage",
+				"corejs": 3
+			}
+		]
+	],
+	"plugins": [
+		"@babel/plugin-proposal-object-rest-spread",
+		"@babel/plugin-proposal-class-properties"
+	]
+}

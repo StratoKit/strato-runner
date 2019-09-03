@@ -1,5 +1,7 @@
 .DS_Store
-/coverage
 node_modules
+
 pnpm-debug.log
-/dist
+
+/packages/*/coverage
+/packages/*/dist
