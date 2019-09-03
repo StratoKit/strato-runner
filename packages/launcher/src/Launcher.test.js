@@ -1,4 +1,4 @@
-import {registerPlugin, load, start} from '.'
+import {registerPlugin, start} from '.'
 
 const test2 = {
 	name: 'test2',
@@ -31,7 +31,7 @@ registerPlugin({
 		if (!states.test2.loaded) throw new Error('test2 not loaded')
 		return {loaded: config.otherPath}
 	},
-	start: async ({config, state, states}) => {
+	start: async ({state, states}) => {
 		if (!state || !state.loaded) throw new Error('Did not get state arg')
 		if (!states || !states.test2) throw new Error('Did not get states arg')
 		if (!states.test2.started) throw new Error('test2 not started')

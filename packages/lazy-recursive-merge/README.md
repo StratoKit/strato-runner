@@ -1,14 +1,18 @@
-# lazy-eval-recursive-config
+# lazy-recursive-merge
 
 Allow declarative configurations from independent sources with
 embedded evaluation.
 
+This happens by taking an array of objects and merging them into a new object, and then providing getter functions to call functions with the new object. This allows creating e.g. a configuration where lower-priority configurations can access the higher-priority configuration values for calculations.
+
+Using this concept, you can merge arrays, define file paths with prefixes, conditionally enable features etc.
+
 Example:
 
-Given the configuration objects
+Given the objects
 
 ```js
-;[
+const configs = [
 	{a: 'a'},
 	{b: cfg => `${cfg.a}/${cfg.p}`},
 	{p: 'hi'},
@@ -46,4 +50,9 @@ Given an array of objects, they are merged as follows:
 
 ## Requirements
 
-This only uses `Object.defineProperty` so should work on everything.
+This only uses `Object.defineProperty` and `WeakMap`, so it should work on everything with a polyfill for `WeakMap`.
+
+## TODO
+
+- make a proper npm package build that will work for browsers
+- a function to find which config determined the value of a given path, for error reporting.

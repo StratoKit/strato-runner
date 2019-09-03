@@ -26,6 +26,7 @@ export const _mergeKeys = configs => {
 }
 
 // removes non-mergeable values
+// TODO merge plain objects without functions
 export const _squash = core => {
 	const newCore = []
 	for (let i = core.length; i; i--) {
@@ -57,7 +58,7 @@ const setReadOnly = (o, key, value) => {
 }
 const rootMap = new WeakMap()
 // merges configs into an object
-// target object is presumed empty
+// target object is made empty - this allows retaining a reference to it
 const mergeConfigs = ({configs, path: parentPath = [], target, root}) => {
 	if (target) {
 		// empty target
@@ -109,6 +110,7 @@ const mergeConfigs = ({configs, path: parentPath = [], target, root}) => {
 							throw error
 						}
 						// function result completely replaces anything below
+						// any merges have to be done by the function
 						prev = undefined
 					}
 
@@ -125,6 +127,7 @@ const mergeConfigs = ({configs, path: parentPath = [], target, root}) => {
 				running.delete(getter)
 
 				// only calculate once, store result
+				// this allows deeper evaluation without cycles
 				setReadOnly(target, key, result)
 
 				return result
@@ -142,11 +145,10 @@ const mergeConfigs = ({configs, path: parentPath = [], target, root}) => {
 	return target
 }
 
-const makeConfig = (configs, {target} = {}) => {
+const lazyMerge = (configs, {target} = {}) => {
 	// The last config overrides all, but we work from 0 to make things easier
 	const reversed = [...configs].reverse()
-	// TODO pass plugin/context per config, e.g. when it's an array
 	return mergeConfigs({configs: reversed, target})
 }
 
-export default makeConfig
+export default lazyMerge

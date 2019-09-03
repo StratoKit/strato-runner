@@ -1,8 +1,14 @@
 {
-  "name": "@stratokit/launcher",
+  "name": "lazy-recursive-merge",
   "version": "1.0.0-rc1",
-  "description": "Highly modular plugin runner with lazy-evaluating configuration",
-  "keywords": ["plugin", "plugins", "config", "configuration", "lazy"],
+  "description": "Deep-merge objects with lazily-called accessor functions",
+  "keywords": [
+    "plugin",
+    "plugins",
+    "config",
+    "configuration",
+    "lazy"
+  ],
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com/StratoKit/stratokit.git"
@@ -26,18 +32,18 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "latest",
+    "@babel/cli": "7.5.5",
     "@babel/core": "7.5.5",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "7.5.5",
     "@babel/preset-env": "7.5.5",
-    "@babel/register": "latest",
+    "@babel/register": "7.5.5",
     "babel-eslint": "10.0.3",
     "core-js": "3.2.1",
     "debug": "4.1.1",
     "eslint": "6.3.0",
     "eslint-config-xo": "0.26.0",
-    "eslint-import-resolver-node": "^0.3.2",
+    "eslint-import-resolver-node": "0.3.2",
     "eslint-plugin-babel": "5.3.0",
     "eslint-plugin-import": "2.18.2",
     "eslint-plugin-jest": "22.16.0",
@@ -45,9 +51,7 @@
     "eslint-plugin-unicorn": "10.0.0",
     "expect": "24.9.0",
     "jest": "24.9.0",
+    "jest-cli": "24.9.0",
     "nps-utils": "1.7.0"
-  },
-  "dependencies": {
-    "lazy-recursive-merge": "^1.0.0-rc1"
   }
 }

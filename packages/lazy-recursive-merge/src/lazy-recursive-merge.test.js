@@ -1,4 +1,4 @@
-import makeConfig, {_getCore, _mergeKeys, _squash} from './makeConfig'
+import makeConfig, {_getCore, _mergeKeys, _squash} from './lazy-recursive-merge'
 
 const configs = [
 	{n: 1, a: true, c: NaN, d: {e: 3}},

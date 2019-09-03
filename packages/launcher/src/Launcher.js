@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import debug from 'debug'
-import {makeConfig} from './config'
+import makeConfig from 'lazy-recursive-merge'
 import getPlugin from './registry'
 
 const dbg = debug('stratokit')

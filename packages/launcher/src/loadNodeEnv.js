@@ -28,7 +28,7 @@ const loadAny = (base, path, envConfigs) =>
 	tryLoad(base, `${path}`, envConfigs) ||
 	tryLoad(base, `${path}.json`, envConfigs)
 
-const loadConfigs = ({base = process.cwd(), yaml = false}) => {
+const loadNodeEnv = ({base = process.cwd(), yaml = false}) => {
 	if (yaml) require('../transpile/register-yaml')
 	const envConfigs = []
 	dbg(`loading configuration`)
@@ -41,4 +41,4 @@ const loadConfigs = ({base = process.cwd(), yaml = false}) => {
 	return envConfigs
 }
 
-export default loadConfigs
+export default loadNodeEnv
