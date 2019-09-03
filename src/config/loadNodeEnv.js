@@ -1,6 +1,5 @@
 // TODO when module.hot, mark the configs as dependencies so they reload
 import debug from 'debug'
-import '../transpile/register-yaml'
 
 const dbg = debug('stratokit/env')
 
@@ -29,7 +28,8 @@ const loadAny = (base, path, envConfigs) =>
 	tryLoad(base, `${path}`, envConfigs) ||
 	tryLoad(base, `${path}.json`, envConfigs)
 
-const loadConfigs = (base = process.cwd()) => {
+const loadConfigs = ({base = process.cwd(), yaml = false}) => {
+	if (yaml) require('../transpile/register-yaml')
 	const envConfigs = []
 	dbg(`loading configuration`)
 	if (!loadAny(base, 'config', envConfigs)) {
