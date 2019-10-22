@@ -15,17 +15,13 @@ const readPackage = (pkg, context) => {
 	if (/^.?6/.test(runtime)) {
 		pkg.dependencies['babel-runtime'] = babelRuntimeVersion
 		context.log(
-			`replacing ${
-				pkg.name
-			}'s babel-runtime dep ${runtime} with ${babelRuntimeVersion}`
+			`replacing ${pkg.name}'s babel-runtime dep ${runtime} with ${babelRuntimeVersion}`
 		)
 	}
 	if (regen && regen !== regenVersion) {
 		pkg.dependencies['regenerator-runtime'] = regenVersion
 		context.log(
-			`replacing ${
-				pkg.name
-			}'s regenerator-runtime dep ${regen} with ${regenVersion} (fix until newer Babel runtime)`
+			`replacing ${pkg.name}'s regenerator-runtime dep ${regen} with ${regenVersion} (fix until newer Babel runtime)`
 		)
 	}
 	return pkg
