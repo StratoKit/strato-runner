@@ -17,6 +17,10 @@ export const _getCore = (path, configs) =>
 		.filter(r => r[0])
 		.map(r => r[1])
 
+/**
+ * @param {object[]} configs objects to merge keys of
+ * @returns {string[]} merged keys
+ */
 export const _mergeKeys = configs => {
 	const allKeys = {}
 	for (const config of configs)
@@ -26,7 +30,7 @@ export const _mergeKeys = configs => {
 }
 
 // removes non-mergeable values
-// TODO merge plain objects without functions
+// TODO optimization: merge plain objects without any functions
 export const _squash = core => {
 	const newCore = []
 	for (let i = core.length; i; i--) {
@@ -57,11 +61,19 @@ const setReadOnly = (o, key, value) => {
 	})
 }
 const rootMap = new WeakMap()
-// merges configs into an object
-// target object is made empty - this allows retaining a reference to it
+/**
+ * merges configs into an object
+ * target object is made empty - this allows retaining a reference to it
+ * @param {object} options options
+ * @param {object[]} options.configs the objects to merge
+ * @param {string[]} [options.path] path to current object
+ * @param {object} [options.target] target object
+ * @param {object} [options.root] root object
+ * @returns {object} read-only merged objects
+ */
 const mergeConfigs = ({configs, path: parentPath = [], target, root}) => {
 	if (target) {
-		// empty target
+		// empty out target
 		for (const key of Object.keys(target)) delete target[key]
 	} else {
 		target = {}
@@ -145,9 +157,25 @@ const mergeConfigs = ({configs, path: parentPath = [], target, root}) => {
 	return target
 }
 
-const lazyMerge = (configs, {target} = {}) => {
+/**
+ * Lazily merge an array of objects. Function values are called as
+ * `fn(root, {prev, path})`:
+ *   - root: the merged root object, for reading the values in other places
+ *   - prev: the value of the current location from the previous objects
+ *   - path: the path in root of the function, as an array of keys
+ *
+ * The return value becomes the new value at `path` in `root`. If the value is an
+ * object, it is further merged.
+ * To have a function as a value, return it from this function
+ *
+ * @param {(object)[]} objects objects to merge
+ * @param {object} options options
+ * @param {object} [options.target] target object for the configuration
+ * @returns {object} read-only merged objects. If `target` was passed, this is `target`
+ */
+const lazyMerge = (objects, {target} = {}) => {
 	// The last config overrides all, but we work from 0 to make things easier
-	const reversed = [...configs].reverse()
+	const reversed = [...objects].reverse()
 	return mergeConfigs({configs: reversed, target})
 }
 

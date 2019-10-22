@@ -26,6 +26,10 @@ the resulting configuration is
 {a: 'a', b: 'a/hello', p: 'hello', f: 'm:a/hello'}
 ```
 
+In other words, the key `p` in the last object was used by the key `b` in the second object, and the key `f` in the last object used the key `b` in turn.
+
+This way, you can define configurations that are loosely coupled but can change any part of the final configuration programmatically. This is a useful property for pluggable systems.
+
 ## How it works
 
 Given an array of objects, they are merged as follows:
@@ -42,17 +46,21 @@ Given an array of objects, they are merged as follows:
 
 ## API
 
-`makeConfig(configs, {target} = {})`
+`lazyRecursiveMerge(objects, {target} = {})`
 
-- `configs`: array of objects
+- `objects`: array of objects
 - `target`: optional object that will get the configuration
 - returns the configuration object
 
+The return value is the mutated `target` object if it was passed. This way, you can retain
+references to a changing configuration object.
+
 ## Requirements
 
-This only uses `Object.defineProperty` and `WeakMap`, so it should work on everything with a polyfill for `WeakMap`.
+This only uses `Object.defineProperty` and `WeakMap` (for loop detection only), so it should work on everything with a polyfill for `WeakMap`.
 
-## TODO
+## Ideas for future work
 
 - make a proper npm package build that will work for browsers
 - a function to find which config determined the value of a given path, for error reporting.
+- if `WeakMap` is not available, use a recursion depth limit
