@@ -1,6 +1,6 @@
 const {concurrent, rimraf, getBin} = require('nps-utils')
 
-const runBabel = `NODE_ENV=production babel -s true --ignore '**/*.test.js,**/__snapshots__' -d dist/`
+const runBabel = `NODE_ENV=production babel --root-mode upward -s true --ignore '**/*.test.js,**/__snapshots__' -d dist/`
 
 let jestBin
 try {

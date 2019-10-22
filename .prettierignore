@@ -2,5 +2,4 @@
 /packages/*/coverage
 /dist
 /packages/*/dist
-/package.json
 node_modules
