@@ -3,9 +3,29 @@ import debug from 'debug'
 
 const dbg = debug('stratokit/env')
 
+const getVersion = config => {
+	try {
+		const pkg = require(require.resolve('./package.json', {
+			paths: config.paths.root,
+		}))
+		return pkg.version
+	} catch (err) {
+		if (err.code !== 'MODULE_NOT_FOUND') throw err
+	}
+}
+
+const defaultConfig = {
+	paths: {
+		root: process.cwd(),
+	},
+	env: process.env.NODE_ENV || 'development',
+	version: getVersion,
+}
+
 const tryLoad = (base, path, envConfigs) => {
 	const file = `${base}/${path}`
 	// Extend with other bundler globals
+	// @ts-ignore
 	const reqFn = global.__non_webpack_require__ || require
 	try {
 		let cfg = reqFn(file)
@@ -29,8 +49,8 @@ const loadAny = (base, path, envConfigs) =>
 	tryLoad(base, `${path}.json`, envConfigs)
 
 const loadNodeEnv = ({base = process.cwd(), yaml = false}) => {
-	if (yaml) require('../transpile/register-yaml')
-	const envConfigs = []
+	if (yaml) require('./transpile/register-yaml')
+	const envConfigs = [defaultConfig]
 	dbg(`loading configuration`)
 	if (!loadAny(base, 'config', envConfigs)) {
 		loadAny(base, 'config/default', envConfigs)

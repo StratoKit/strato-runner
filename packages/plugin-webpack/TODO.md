@@ -1,0 +1,2 @@
+- add `sideEffects: [ "*css" ]` to app package.json
+- split off babel plugin

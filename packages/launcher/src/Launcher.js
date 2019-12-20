@@ -15,6 +15,7 @@ class Launcher {
 	_extraConfigs = []
 
 	constructor({extraConfigs = []}) {
+		// TODO flatten/boolean filter
 		if (extraConfigs && !Array.isArray(extraConfigs)) {
 			if (typeof extraConfigs === 'object') {
 				extraConfigs = [extraConfigs]
