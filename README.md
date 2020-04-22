@@ -1,4 +1,11 @@
-# StratoKit: Highly modular NodeJS project framework
+# Strato-Runner: Highly modular NodeJS project framework
+
+Light-weight tooling to make modular and maintainable applications in NodeJs, using a plugin pattern.
+
+Current development is happening in the [new-new-config branch](https://github.com/StratoKit/strato-runner/tree/new-new-config).
+
+Anything below this line is outdated:
+---
 
 # TODO
 
