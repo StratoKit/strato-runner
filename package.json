@@ -44,9 +44,9 @@
     "lodash": "^4.17.10"
   },
   "dependencies": {
-    "@babel/core": "7.4.5",
-    "@babel/plugin-proposal-object-rest-spread": "7.4.4",
-    "@babel/preset-env": "7.4.5",
+    "@babel/core": "^7",
+    "@babel/plugin-proposal-object-rest-spread": "7.17.3",
+    "@babel/preset-env": "7.16.11",
     "@babel/register": "latest",
     "core-js": "3",
     "electrode-confippet": "1.5.0",
